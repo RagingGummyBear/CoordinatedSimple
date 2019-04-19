@@ -1,0 +1,32 @@
+PODS:
+  - CryptoSwift (1.0.0)
+  - PromiseKit (6.8.4):
+    - PromiseKit/CorePromise (= 6.8.4)
+    - PromiseKit/Foundation (= 6.8.4)
+    - PromiseKit/UIKit (= 6.8.4)
+  - PromiseKit/CorePromise (6.8.4)
+  - PromiseKit/Foundation (6.8.4):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (6.8.4):
+    - PromiseKit/CorePromise
+  - ReachabilitySwift (4.3.1)
+
+DEPENDENCIES:
+  - CryptoSwift
+  - PromiseKit (~> 6.8)
+  - ReachabilitySwift
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - CryptoSwift
+    - PromiseKit
+    - ReachabilitySwift
+
+SPEC CHECKSUMS:
+  CryptoSwift: d81eeaa59dc5a8d03720fe919a6fd07b51f7439f
+  PromiseKit: 51794a832647e7b819336dc2279039ce9f1cc49b
+  ReachabilitySwift: 4032e2f59586e11e3b0ebe15b167abdd587a388b
+
+PODFILE CHECKSUM: 414b037b0919767e8f59d337bc1f5a4a49d3853d
+
+COCOAPODS: 1.5.3

@@ -1,25 +1,29 @@
 //
-//  UsersDataViewController.swift
+//  SelectLoggedUserViewController.swift
 //  CoordinatedSimple
 //
-//  Created by Seavus on 4/19/19.
+//  Created by Seavus on 4/22/19.
 //  Copyright © 2019 Seavus. All rights reserved.
 //
 
 import UIKit
-import PromiseKit
 
-class UsersDataViewController: UIViewController, Storyboarded {
+class SelectLoggedUserViewController: UIViewController, Storyboarded {
 
     // MARK: - Custom references and variables
-    weak var coordinator: UsersDataCoordinator? // Don't remove
-    var dataSource: TableViewDataSource<UserModel>!
+    weak var coordinator: SelectLoggedUserCoordinator? // Don't remove
 
     // MARK: - IBOutlets references
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var userIDLabel: UILabel!
+    @IBOutlet weak var userNameLabel: UILabel!
+    @IBOutlet weak var userUsernameLabel: UILabel!
+    @IBOutlet weak var userEmailLabel: UILabel!
     
     // MARK: - IBOutlets actions
-
+    @IBAction func setDefaultUserAction(_ sender: Any) {
+        self.coordinator?.setLoggedUser()
+    }
+    
     // MARK: - View lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,34 +43,28 @@ class UsersDataViewController: UIViewController, Storyboarded {
 
     // MARK: - UI Functions
     func initalUISetup(){
-        self.tableView.delegate = self
         // Change label's text, etc.
     }
 
     func finalUISetup(){
         // Here do all the resizing and constraint calculations
         // In some cases apply the background gradient here
-        self.coordinator?.requestAllUsers().done({ (result: [UserModel]) in
-            self.usersDidLoad(result)
-        }) .catch({ (error:Error) in
-            print(error)
+        self.coordinator?.requestSelectedUser().done({ (user: UserModel) in
+            self.userIDLabel.text = "\(user.id!)"
+            self.userNameLabel.text = user.name
+            self.userEmailLabel.text = user.email
+            self.userUsernameLabel.text = user.username
+        }).catch({ (error: Error) in
             self.navigationController?.popViewController(animated: true)
         })
     }
 
     // MARK: - Other functions
     // Remember keep the logic and processing in the coordinator
-    
-    func usersDidLoad(_ users: [UserModel]) {
-        self.dataSource = TableViewDataSource.make(for: users)
-        tableView.dataSource = dataSource
-        self.tableView.reloadData()
-    }
-    
-}
-
-extension UsersDataViewController : UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.coordinator?.displaySelectedUser(selectedUser: self.dataSource.models[indexPath.row])
+    func setSelectedUser(user: UserModel){
+//        self.userIDLabel.text = "\(user.id ?? -1)"
+        self.userNameLabel.text = user.name
+        self.userEmailLabel.text = user.email
+        self.userUsernameLabel.text = user.username
     }
 }

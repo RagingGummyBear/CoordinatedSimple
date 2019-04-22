@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import PromiseKit
 
 class UsersDataCoordinator:NSObject, Coordinator {
 
@@ -23,6 +24,7 @@ class UsersDataCoordinator:NSObject, Coordinator {
     }()
 
     weak var parentCoordinator: MainCoordinator?
+    weak var viewController: UsersDataViewController!
 
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
@@ -40,21 +42,26 @@ class UsersDataCoordinator:NSObject, Coordinator {
     /* *********************************** */
     func start(){
         self.navigationController.delegate = self // This line is a must do not remove
-        let vc = UsersDataViewController.instantiate()
-        vc.coordinator = self
-        navigationController.pushViewController(vc, animated: true)
-        self.dataProvider.readAllUsers().done { (users: [UserModel]) in
-            vc.usersDidLoad(users)
-        }.catch { (error: Error) in
-            print(error)
-        }
+        self.viewController = UsersDataViewController.instantiate()
+        self.viewController.coordinator = self
+        self.navigationController.pushViewController(self.viewController, animated: true)
+        
+//        self.dataProvider.readAllUsers().done { (users: [UserModel]) in
+//            self.viewController.usersDidLoad(users)
+//        }.catch { (error: Error) in
+//            print(error)
+//        }
     }
 
     func childPop(_ child: Coordinator?){
         self.navigationController.delegate = self // This line is a must do not remove
 
         // Do coordinator parsing //
-
+        if let coordinator = child as? SelectLoggedUserCoordinator {
+            if coordinator.pickedNewUser {
+                self.navigationController.popViewController(animated: true)
+            }
+        }
         // ////////////////////// //
 
         // Default code used for removing of child coordinators // TODO: refactor it
@@ -68,6 +75,11 @@ class UsersDataCoordinator:NSObject, Coordinator {
     
     internal func getDataProvider() -> DataProvider {
         return self.dataProvider
+    }
+    
+    // MARK: - Other functions
+    public func requestAllUsers() -> Promise<[UserModel]>{
+        return self.dataProvider.readAllUsers()
     }
 
     /* **************************************** */
@@ -107,6 +119,13 @@ class UsersDataCoordinator:NSObject, Coordinator {
     /* ******************** */
     // Transition Functions //
     /* ******************** */
+    
+     func displaySelectedUser(selectedUser: UserModel) {
+         let child = SelectLoggedUserCoordinator(navigationController: navigationController)
+         child.parentCoordinator = self
+         childCoordinators.append(child)
+        child.start(selectedUser: selectedUser)
+     }
 
     /* **************************************** */
     // Examples // Remove them after inspecting //

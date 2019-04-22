@@ -1,32 +1,35 @@
 //
-//  MainCoordinator.swift
+//  SelectLoggedUserCoordinator.swift
 //  CoordinatedSimple
 //
-//  Created by Seavus on 4/18/19.
+//  Created by Seavus on 4/22/19.
 //  Copyright © 2019 Seavus. All rights reserved.
 //
 
 import Foundation
 import UIKit
+import PromiseKit
 
-class MainCoordinator:NSObject, Coordinator {
+class SelectLoggedUserCoordinator:NSObject, Coordinator {
 
     /* ********** */
     // Properties //
     /* ********** */
-    public lazy var dataProvider = { () -> DataProvider in
+    lazy var dataProvider = { () -> DataProvider in
         if let parent = self.parentCoordinator {
             return parent.getDataProvider()
         } else {
             return DataProvider()
         }
     }()
-    
-    weak var parentCoordinator: MainCoordinator?
-    weak var viewController: MainMenuViewController!
+
+    weak var parentCoordinator: UsersDataCoordinator?
+    weak var viewController: SelectLoggedUserViewController!
 
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
+    var selectedUser: UserModel?
+    public var pickedNewUser = false
 
 
     /* ************* */
@@ -41,29 +44,26 @@ class MainCoordinator:NSObject, Coordinator {
     /* *********************************** */
     func start(){
         self.navigationController.delegate = self // This line is a must do not remove
-        self.viewController = MainMenuViewController.instantiate()
+        self.viewController = SelectLoggedUserViewController.instantiate()
         self.viewController.coordinator = self
-        navigationController.pushViewController(self.viewController, animated: true)
+        self.navigationController.pushViewController(self.viewController, animated: true)
         
-        self.dataProvider.getLoggedUser().done { (result: UserModel) in
-            self.viewController.setLoggedUser(user: result)
-        }.catch { (error: Error) in
-            print(error)
-        }
+    }
+    
+    func start(selectedUser: UserModel){
+        self.navigationController.delegate = self // This line is a must do not remove
+        self.viewController = SelectLoggedUserViewController.instantiate()
+        self.viewController.coordinator = self
+        self.navigationController.pushViewController(self.viewController, animated: true)
+        self.selectedUser = selectedUser
     }
 
     func childPop(_ child: Coordinator?){
         self.navigationController.delegate = self // This line is a must do not remove
-        
+        /* ********************** */
         // Do coordinator parsing //
-        if (child as? UsersDataCoordinator) != nil {
-            self.dataProvider.getLoggedUser().done { (user: UserModel) in
-                self.viewController.setLoggedUser(user: user)
-                }.catch { (error: Error) in
-                    // I really dont care about this :D
-            }
-        }
-        // ////////////////////// //
+
+        /* ********************** */
 
         // Default code used for removing of child coordinators // TODO: refactor it
         for (index, coordinator) in childCoordinators.enumerated() {
@@ -73,10 +73,33 @@ class MainCoordinator:NSObject, Coordinator {
             }
         }
     }
-    
-    func getDataProvider() -> DataProvider {
+
+    internal func getDataProvider() -> DataProvider {
         return self.dataProvider
     }
+    
+    /* ******************** */
+    // Additional functions //
+    /* ******************** */
+    func requestSelectedUser() -> Promise<UserModel> {
+        return Promise { resolve in
+            if let selected = self.selectedUser {
+                resolve.fulfill(selected)
+            } else {
+                resolve.reject(NSError(domain: "No selected user", code: 404, userInfo: nil))
+            }
+        }
+    }
+    
+    func setLoggedUser(){
+        if let user = self.selectedUser {
+            self.pickedNewUser = true
+            self.dataProvider.setLoggedUser(selectedUser: user)
+            self.navigationController.popViewController(animated: true)
+        }
+    }
+    
+    
 
     /* **************************************** */
     // Examples // Remove them after inspecting //
@@ -115,28 +138,7 @@ class MainCoordinator:NSObject, Coordinator {
     /* ******************** */
     // Transition Functions //
     /* ******************** */
-    
-    func displayToDoList(){
-         let child = ToDoCoordinator(navigationController: navigationController)
-         child.parentCoordinator = self
-         childCoordinators.append(child)
-         child.start()
-    }
 
-    func displayUsersData(){
-        let child = UsersDataCoordinator(navigationController: navigationController)
-        child.parentCoordinator = self
-        childCoordinators.append(child)
-        child.start()
-    }
-    
-    func displayUserAlbums(){
-        let child = AlbumDisplayCoordinator(navigationController: navigationController)
-        child.parentCoordinator = self
-        childCoordinators.append(child)
-        child.start()
-    }
-    
     /* **************************************** */
     // Examples // Remove them after inspecting //
     // func buySubscription() {
@@ -154,6 +156,8 @@ class MainCoordinator:NSObject, Coordinator {
     // }
     /* **************************************** */
 
+    
+    
     /* ************************************************************* */
     // Saddly I don't know how to put this code into the protocol :( //
     /* ************************************************************* */

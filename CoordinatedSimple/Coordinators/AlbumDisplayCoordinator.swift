@@ -1,29 +1,30 @@
 //
-//  MainCoordinator.swift
+//  AlbumDisplayCoordinator.swift
 //  CoordinatedSimple
 //
-//  Created by Seavus on 4/18/19.
+//  Created by Seavus on 4/22/19.
 //  Copyright © 2019 Seavus. All rights reserved.
 //
 
 import Foundation
 import UIKit
+import PromiseKit
 
-class MainCoordinator:NSObject, Coordinator {
+class AlbumDisplayCoordinator:NSObject, Coordinator {
 
     /* ********** */
     // Properties //
     /* ********** */
-    public lazy var dataProvider = { () -> DataProvider in
+    lazy var dataProvider = { () -> DataProvider in
         if let parent = self.parentCoordinator {
             return parent.getDataProvider()
         } else {
             return DataProvider()
         }
     }()
-    
+
     weak var parentCoordinator: MainCoordinator?
-    weak var viewController: MainMenuViewController!
+    weak var viewController: AlbumDisplayViewController!
 
     var childCoordinators = [Coordinator]()
     var navigationController: UINavigationController
@@ -41,28 +42,16 @@ class MainCoordinator:NSObject, Coordinator {
     /* *********************************** */
     func start(){
         self.navigationController.delegate = self // This line is a must do not remove
-        self.viewController = MainMenuViewController.instantiate()
+        self.viewController = AlbumDisplayViewController.instantiate()
         self.viewController.coordinator = self
-        navigationController.pushViewController(self.viewController, animated: true)
-        
-        self.dataProvider.getLoggedUser().done { (result: UserModel) in
-            self.viewController.setLoggedUser(user: result)
-        }.catch { (error: Error) in
-            print(error)
-        }
+        self.navigationController.pushViewController(self.viewController, animated: true)
     }
 
     func childPop(_ child: Coordinator?){
         self.navigationController.delegate = self // This line is a must do not remove
-        
+
         // Do coordinator parsing //
-        if (child as? UsersDataCoordinator) != nil {
-            self.dataProvider.getLoggedUser().done { (user: UserModel) in
-                self.viewController.setLoggedUser(user: user)
-                }.catch { (error: Error) in
-                    // I really dont care about this :D
-            }
-        }
+
         // ////////////////////// //
 
         // Default code used for removing of child coordinators // TODO: refactor it
@@ -73,70 +62,39 @@ class MainCoordinator:NSObject, Coordinator {
             }
         }
     }
-    
-    func getDataProvider() -> DataProvider {
+
+    internal func getDataProvider() -> DataProvider {
         return self.dataProvider
     }
-
+    
+    func requestAlbumData() -> Promise<[AlbumModel]> {
+        return Promise { resolve in
+            self.dataProvider.getLoggedUser().done({ (user: UserModel) in
+                self.dataProvider.readAlbums(from: user.id).done({ (result: [AlbumModel]) in
+                    resolve.fulfill(result)
+                }) .catch({ (error: Error) in
+                    resolve.reject(error)
+                })
+            }) .catch({ (error: Error) in
+                resolve.reject(error)
+            })
+        }
+    }
+    
     /* **************************************** */
-    // Examples // Remove them after inspecting //
-    // func start() {
-    //     navigationController.delegate = self
-    //     let vc = BuyViewController.instantiate()
-    //     vc.coordinator = self
-    //     navigationController.pushViewController(vc, animated: true)
-    //     // we'll add code here
-    // }
-    //
-    // func start(to productType: Int) {
-    //     navigationController.delegate = self
-    //     let vc = BuyViewController.instantiate()
-    //     vc.selectedProduct = productType
-    //     vc.coordinator = self
-    //     navigationController.pushViewController(vc, animated: true)
-    // }
-    //
-    // func childPop(_ child: Coordinator?) {
-    //     self.navigationController.delegate = self
-    //     print("Who dis boi?")
-    //     /* Do coordinator casting here */
-    //
-    //
-    //     // Default code used for removing of child coordinators // TODO: refactor it
-    //     for (index, coordinator) in childCoordinators.enumerated() {
-    //         if coordinator === child {
-    //             childCoordinators.remove(at: index)
-    //             break
-    //         }
-    //     }
-    // }
     /* **************************************** */
 
     /* ******************** */
     // Transition Functions //
     /* ******************** */
     
-    func displayToDoList(){
-         let child = ToDoCoordinator(navigationController: navigationController)
-         child.parentCoordinator = self
-         childCoordinators.append(child)
-         child.start()
+    func displayAlbum(album: AlbumModel){
+        let child = PhotoDisplayCoordinator(navigationController: navigationController)
+        child.parentCoordinator = self
+        childCoordinators.append(child)
+        child.start(selectedAlbum: album)
     }
 
-    func displayUsersData(){
-        let child = UsersDataCoordinator(navigationController: navigationController)
-        child.parentCoordinator = self
-        childCoordinators.append(child)
-        child.start()
-    }
-    
-    func displayUserAlbums(){
-        let child = AlbumDisplayCoordinator(navigationController: navigationController)
-        child.parentCoordinator = self
-        childCoordinators.append(child)
-        child.start()
-    }
-    
     /* **************************************** */
     // Examples // Remove them after inspecting //
     // func buySubscription() {

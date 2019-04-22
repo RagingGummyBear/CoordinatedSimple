@@ -8,21 +8,17 @@
 
 import Foundation
 import PromiseKit
+import UIKit
 
 public class DataProvider {
-    
-
-    
     
     // MARK: - Properties
     let persistentStorage:PersistentStorage = KeyedArchiverHandler()
     let apiManager: APIManager = APIManager()
     
-    // MARK: - Functions
     
-    // User CRUD
+    // MARK: - Users => CRUD
     func readAllUsers() -> Promise<[UserModel]>{
-        
         return self.apiManager.getAllUsers()
     }
     
@@ -30,7 +26,7 @@ public class DataProvider {
         return self.apiManager.readUser(userID: userID)
     }
     
-    func updateUser(userId: Int){
+    func updateUser(user: UserModel){
         // patch
     }
     
@@ -43,6 +39,104 @@ public class DataProvider {
     }
     
     
+    // MARK: - TODOs => CRUD
+    func readAllTODOs() -> Promise<[ToDoModel]>{
+        return self.apiManager.realAllTODOs()
+    }
+    
+    func readTODO(todoId: Int) -> Promise<ToDoModel> {
+        return self.apiManager.readTODO(todoId: todoId)
+    }
+    
+    func updateTODO(todo: ToDoModel){
+        // patch
+    }
+    
+    func deleteTODO(todoId: Int){
+        // delete
+    }
+    
+    func createTODO(todo: UserModel){
+        // put
+    }
+    
+    // MARK: - Albums => CRUD
+    func readAllAlbums() {
+    }
+    
+    func readAlbum(albumId: Int){
+        
+    }
+    
+    func updateAlbum(album: AlbumModel){
+        // patch
+    }
+    
+    func deleteAlbum(albumId: Int){
+        // delete
+    }
+    
+    func createAlbum(album: UserModel){
+        // put
+    }
+    
+    
+    // MARK: - Photos => CRUD
+    func readAllPhotos() -> Promise<[PhotoModel]> {
+        return  Promise { resolve in
+            
+        }
+    }
+    
+    func readPhoto(photoId: Int) -> Promise<PhotoModel> {
+        return  Promise { resolve in
+            
+        }
+    }
+    
+    func updatePhoto(photo: PhotoModel) -> Promise<PhotoModel> {
+        return  Promise { resolve in
+            
+        }
+    }
+    
+    func deletePhoto(photoId: Int) -> Promise<Bool> {
+        return  Promise { resolve in
+            
+        }
+    }
+    
+    func createPhoto(photo: PhotoModel) -> Promise<PhotoModel> {
+        return  Promise { resolve in
+            
+        }
+    }
+    
+    
+    // MARK: - Other.
+    func getLoggedUser() -> Promise<UserModel>{
+        return self.persistentStorage.getLoggedUser()
+    }
+    
+    func setLoggedUser(selectedUser: UserModel){
+        self.persistentStorage.setLoggedUser(user: selectedUser)
+    }
+    
+    func readTODOs(from userId: Int) -> Promise<[ToDoModel]> {
+        return self.apiManager.readTODOs(from: userId)
+    }
+    
+    func readAlbums(from userId: Int) -> Promise<[AlbumModel]> {
+        return self.apiManager.readAlbums(from: userId)
+    }
+    
+    func readPhotos(from albumId: Int) -> Promise<[PhotoModel]> {
+        return self.apiManager.readPhotos(from: albumId)
+    }
+    
+    func getUIImage(from photo: PhotoModel) -> Promise<UIImage> {
+        return self.apiManager.fetchUIImage(photo: photo)
+    }
     
     /* ************************************* */
     /* *** */ // TESTING FUNCTIONS // /* *** */
@@ -81,7 +175,7 @@ public class DataProvider {
                         print("Deleting user \(result)")
                         self.persistentStorage.readAllUsers().done({ (result:[UserModel]) in
                             result.forEach({ (user: UserModel) in
-                                print(user.id)
+                                print(user.id ?? "-1")
                             })
                         })
                     }).catch({ (error: Error) in

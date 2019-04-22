@@ -14,13 +14,18 @@ class MainMenuViewController: UIViewController, Storyboarded {
     weak var coordinator: MainCoordinator? // Don't remove
 
     // MARK: - IBOutlets references
-
+    @IBOutlet weak var loggedUserLabel: UILabel!
+    @IBOutlet weak var debugImg: UIImageView!
+    
     // MARK: - IBOutlets actions
     @IBAction func getToDoList(_ sender: Any) {
         self.coordinator?.displayToDoList()
     }
     @IBAction func getAllUsers(_ sender: Any) {
         self.coordinator?.displayUsersData()
+    }
+    @IBAction func displayUserAlbums(_ sender: Any) {
+        self.coordinator?.displayUserAlbums()
     }
     
     // MARK: - View lifecycle
@@ -48,8 +53,14 @@ class MainMenuViewController: UIViewController, Storyboarded {
     func finalUISetup(){
         // Here do all the resizing and constraint calculations
         // In some cases apply the background gradient here
+        self.coordinator?.dataProvider.getUIImage(from: PhotoModel(albumId: 0, id: 1, title: "123", url: "https://via.placeholder.com/600/24f355", thumbnailUrl: "123")).done({ (result: UIImage) in
+            self.debugImg.image = result
+        })
     }
 
     // MARK: - Other functions
     // Remember keep the logic and processing in the coordinator
+    func setLoggedUser(user:UserModel){
+        self.loggedUserLabel.text = user.username
+    }
 }

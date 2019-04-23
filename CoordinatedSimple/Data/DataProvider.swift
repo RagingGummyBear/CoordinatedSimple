@@ -134,8 +134,46 @@ public class DataProvider {
         return self.apiManager.readPhotos(from: albumId)
     }
     
+    
     func getUIImage(from photo: PhotoModel) -> Promise<UIImage> {
-        return self.apiManager.fetchUIImage(photo: photo)
+        return Promise { resolve in
+            self.persistentStorage.hasPhoto(photo: photo).done({ (hasUIImg: Bool) in
+                if hasUIImg {
+                    self.persistentStorage.getPhoto(photo: photo).done({ (result: UIImage) in
+                        resolve.fulfill(result)
+                    }) .catch({ (error: Error) in
+                        self.apiManager.fetchUIImage(photo: photo).done({ (image: UIImage) in
+                            self.persistentStorage.savePhoto(photo: photo, uiImage: image, uiImageThumbnail: image)
+                            resolve.fulfill(image)
+                        }) .catch({ (error: Error) in
+                            resolve.reject(error)
+                        })
+                    })
+                } else {
+                    self.apiManager.fetchUIImage(photo: photo).done({ (image: UIImage) in
+                        self.persistentStorage.savePhoto(photo: photo, uiImage: image, uiImageThumbnail: image)
+                        resolve.fulfill(image)
+                    }) .catch({ (error: Error) in
+                        resolve.reject(error)
+                    })
+                }
+            }) .catch({ (error: Error) in
+                self.apiManager.fetchUIImage(photo: photo).done({ (image: UIImage) in
+                    self.persistentStorage.savePhoto(photo: photo, uiImage: image, uiImageThumbnail: image)
+                    resolve.fulfill(image)
+                }) .catch({ (error: Error) in
+                    resolve.reject(error)
+                })
+            })
+        }
+    }
+    
+    func saveToFavourites(photo:PhotoModel, uiImage: UIImage){
+        
+    }
+    
+    func getAllFavourites(){
+        
     }
     
     /* ************************************* */
@@ -177,6 +215,8 @@ public class DataProvider {
                             result.forEach({ (user: UserModel) in
                                 print(user.id ?? "-1")
                             })
+                        }) .catch({ (error: Error) in
+                            print(error)
                         })
                     }).catch({ (error: Error) in
                         print("Failed!")
@@ -214,7 +254,7 @@ public class DataProvider {
                     if (result){
                         self.persistentStorage.readAllUsers().done({ (result: [UserModel]) in
                             result.forEach({ (user: UserModel) in
-                                print(user.id)
+                                print(user.id!)
                             })
                         }).catch({ (error:Error) in
                             print(error)

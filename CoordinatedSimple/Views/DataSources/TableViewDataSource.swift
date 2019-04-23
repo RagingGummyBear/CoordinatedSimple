@@ -43,6 +43,20 @@ class TableViewDataSource<Model>: NSObject, UITableViewDataSource {
     }
 }
 
+extension TableViewDataSource where Model == ExampleModel {
+    static func make(for models: [ExampleModel],
+                     reuseIdentifier: String = "userDataCell") -> TableViewDataSource {
+        return TableViewDataSource(
+            models: models,
+            reuseIdentifier: reuseIdentifier
+        ) { (model, cell) in
+            cell.textLabel?.text = model.title
+            cell.detailTextLabel?.text = model.description
+        }
+    }
+}
+
+
 extension TableViewDataSource where Model == UserModel {
     static func make(for users: [UserModel],
                      reuseIdentifier: String = "userDataCell") -> TableViewDataSource {
@@ -84,7 +98,8 @@ extension TableViewDataSource where Model == AlbumModel {
 }
 
 extension TableViewDataSource where Model == PhotoModel {
-    static func make(for photos: [PhotoModel], imageProvider: UIImageCoordinatorProtocol,
+    
+    static func make(for photos: [PhotoModel], imageProvider: UIImageCoordinatorProtocol, doubleTapDelegate: TableViewCellDoubleTapPhotoDelegate?,
                      reuseIdentifier: String = "photosDisplayCellIdentifier") -> TableViewDataSource {
         return TableViewDataSource(
             models: photos,
@@ -97,6 +112,7 @@ extension TableViewDataSource where Model == PhotoModel {
                 }).catch({ (error: Error) in
                     print(error)
                 })
+                cell.displayingPhoto = photo
             } else {
                 cell.textLabel?.text = photo.title
                 cell.detailTextLabel?.text = photo.url

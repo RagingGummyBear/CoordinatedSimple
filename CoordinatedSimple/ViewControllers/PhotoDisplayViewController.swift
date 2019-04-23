@@ -8,7 +8,9 @@
 
 import UIKit
 
-class PhotoDisplayViewController: UIViewController, Storyboarded {
+class PhotoDisplayViewController: UIViewController, Storyboarded, TableViewCellDoubleTapPhotoDelegate {
+
+    
 
     // MARK: - Custom references and variables
     weak var coordinator: PhotoDisplayCoordinator? // Don't remove
@@ -55,12 +57,16 @@ class PhotoDisplayViewController: UIViewController, Storyboarded {
         print("here")
         self.coordinator?.requestPhotoData().done({ (photos: [PhotoModel]) in
             print("here2")
-            self.dataSource = TableViewDataSource.make(for: photos, imageProvider: self.coordinator!, reuseIdentifier: cellIdentifier)
+            self.dataSource = TableViewDataSource.make(for: photos, imageProvider: self.coordinator!, doubleTapDelegate: nil, reuseIdentifier: cellIdentifier)
             self.tableView.dataSource = self.dataSource
             self.tableView.reloadData()
         }).catch({ (error: Error) in
             print(error)
             self.navigationController?.popViewController(animated: true)
         })
+    }
+    
+    func doubleTapOn(photo: PhotoModel, uiImage: UIImage) {
+        print("Dont care yo")
     }
 }

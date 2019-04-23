@@ -49,9 +49,8 @@ class AlbumDisplayCoordinator:NSObject, Coordinator {
 
     func childPop(_ child: Coordinator?){
         self.navigationController.delegate = self // This line is a must do not remove
-
+        // ////////////////////// //
         // Do coordinator parsing //
-
         // ////////////////////// //
 
         // Default code used for removing of child coordinators // TODO: refactor it
@@ -80,10 +79,10 @@ class AlbumDisplayCoordinator:NSObject, Coordinator {
             })
         }
     }
-    
     /* **************************************** */
     /* **************************************** */
 
+    
     /* ******************** */
     // Transition Functions //
     /* ******************** */
@@ -94,22 +93,7 @@ class AlbumDisplayCoordinator:NSObject, Coordinator {
         childCoordinators.append(child)
         child.start(selectedAlbum: album)
     }
-
     /* **************************************** */
-    // Examples // Remove them after inspecting //
-    // func buySubscription() {
-    //     let child = BuyCoordinator(navigationController: navigationController)
-    //     child.parentCoordinator = self
-    //     childCoordinators.append(child)
-    //     child.start()
-    // }
-    //
-    // func buySubscription(to productType: Int) {
-    //     let child = BuyCoordinator(navigationController: navigationController)
-    //     child.parentCoordinator = self
-    //     childCoordinators.append(child)
-    //     child.start(to: productType)
-    // }
     /* **************************************** */
 
     /* ************************************************************* */

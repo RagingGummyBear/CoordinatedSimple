@@ -49,8 +49,8 @@ class ToDoCoordinator:NSObject, Coordinator {
     func childPop(_ child: Coordinator?){
         self.navigationController.delegate = self // This line is a must do not remove
 
+        // ////////////////////// //
         // Do coordinator parsing //
-
         // ////////////////////// //
 
         // Default code used for removing of child coordinators // TODO: refactor it

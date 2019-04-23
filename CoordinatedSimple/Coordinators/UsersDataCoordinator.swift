@@ -45,17 +45,12 @@ class UsersDataCoordinator:NSObject, Coordinator {
         self.viewController = UsersDataViewController.instantiate()
         self.viewController.coordinator = self
         self.navigationController.pushViewController(self.viewController, animated: true)
-        
-//        self.dataProvider.readAllUsers().done { (users: [UserModel]) in
-//            self.viewController.usersDidLoad(users)
-//        }.catch { (error: Error) in
-//            print(error)
-//        }
     }
 
     func childPop(_ child: Coordinator?){
         self.navigationController.delegate = self // This line is a must do not remove
 
+        // ////////////////////// //
         // Do coordinator parsing //
         if let coordinator = child as? SelectLoggedUserCoordinator {
             if coordinator.pickedNewUser {
@@ -83,37 +78,6 @@ class UsersDataCoordinator:NSObject, Coordinator {
     }
 
     /* **************************************** */
-    // Examples // Remove them after inspecting //
-    // func start() {
-    //     navigationController.delegate = self
-    //     let vc = BuyViewController.instantiate()
-    //     vc.coordinator = self
-    //     navigationController.pushViewController(vc, animated: true)
-    //     // we'll add code here
-    // }
-    //
-    // func start(to productType: Int) {
-    //     navigationController.delegate = self
-    //     let vc = BuyViewController.instantiate()
-    //     vc.selectedProduct = productType
-    //     vc.coordinator = self
-    //     navigationController.pushViewController(vc, animated: true)
-    // }
-    //
-    // func childPop(_ child: Coordinator?) {
-    //     self.navigationController.delegate = self
-    //     print("Who dis boi?")
-    //     /* Do coordinator casting here */
-    //
-    //
-    //     // Default code used for removing of child coordinators // TODO: refactor it
-    //     for (index, coordinator) in childCoordinators.enumerated() {
-    //         if coordinator === child {
-    //             childCoordinators.remove(at: index)
-    //             break
-    //         }
-    //     }
-    // }
     /* **************************************** */
 
     /* ******************** */

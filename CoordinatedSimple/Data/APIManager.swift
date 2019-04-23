@@ -147,22 +147,16 @@ class APIManager {
     
     func fetchUIImage(photo: PhotoModel) -> Promise<UIImage> {
         return Promise { resolve in
-            firstly {
-                return Guarantee<Data> { seal in
-                    do {
-                       let data = try Data( contentsOf: URL(string: photo.url)!)
-                        seal(data)
-                    } catch let error {
-                        resolve.reject(error)
-                    }
+            DispatchQueue.global(qos: .background).async {
+                do {
+                    let data = try Data( contentsOf: URL(string: photo.url)!)
+                    resolve.fulfill(UIImage(data: data)!)
+                } catch let error {
+                    resolve.reject(error)
                 }
-            } .done { data in
-                resolve.fulfill(UIImage(data: data)!)
             }
         }
     }
-    
-    
     /* ********************** */
     // Request prep functions //
     /* ********************** */

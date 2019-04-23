@@ -29,7 +29,6 @@
 		7DC4D48E2268A8A6007CA313 /* CoordinatedSimpleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4D48D2268A8A6007CA313 /* CoordinatedSimpleTests.swift */; };
 		7DC4D4992268A8A6007CA313 /* CoordinatedSimpleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4D4982268A8A6007CA313 /* CoordinatedSimpleUITests.swift */; };
 		7DC8EFD6226D9F90005AB06E /* SectionedTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8EFD5226D9F90005AB06E /* SectionedTableViewDataSource.swift */; };
-		7DC8EFD7226DAD73005AB06E /* PersistentStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E12BC2268C31600BF0D52 /* PersistentStorage.swift */; };
 		7DC8EFD9226DB3B9005AB06E /* SelectLoggedUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8EFD8226DB3B9005AB06E /* SelectLoggedUserViewController.swift */; };
 		7DC8EFDB226DB3CE005AB06E /* SelectLoggedUserCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8EFDA226DB3CE005AB06E /* SelectLoggedUserCoordinator.swift */; };
 		7DC8EFDE226DC6B7005AB06E /* ToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8EFDD226DC6B7005AB06E /* ToDoModel.swift */; };
@@ -44,6 +43,8 @@
 		7DC8EFF2226E0051005AB06E /* UIImageCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8EFF1226E0051005AB06E /* UIImageCoordinator.swift */; };
 		7DC8EFF4226E0166005AB06E /* PhotoDisplayCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8EFF3226E0166005AB06E /* PhotoDisplayCoordinator.swift */; };
 		7DC8EFF6226E0181005AB06E /* PhotoDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC8EFF5226E0181005AB06E /* PhotoDisplayViewController.swift */; };
+		7DD44656226F099A0019BF8B /* TableViewCellDoubleTapDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD44655226F099A0019BF8B /* TableViewCellDoubleTapDelegate.swift */; };
+		7DD44774226F52520019BF8B /* ExampleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD44773226F52520019BF8B /* ExampleModel.swift */; };
 		C7243CA9902BDF66D266D9F5 /* Pods_CoordinatedSimpleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283F27005D08CC4A5406AF78 /* Pods_CoordinatedSimpleTests.framework */; };
 		FCA284AA749B16DFBCF5945E /* Pods_CoordinatedSimpleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 425D1CC08BCC6077AC81F5C0 /* Pods_CoordinatedSimpleUITests.framework */; };
 /* End PBXBuildFile section */
@@ -112,6 +113,8 @@
 		7DC8EFF1226E0051005AB06E /* UIImageCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageCoordinator.swift; sourceTree = "<group>"; };
 		7DC8EFF3226E0166005AB06E /* PhotoDisplayCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDisplayCoordinator.swift; sourceTree = "<group>"; };
 		7DC8EFF5226E0181005AB06E /* PhotoDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDisplayViewController.swift; sourceTree = "<group>"; };
+		7DD44655226F099A0019BF8B /* TableViewCellDoubleTapDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellDoubleTapDelegate.swift; sourceTree = "<group>"; };
+		7DD44773226F52520019BF8B /* ExampleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleModel.swift; sourceTree = "<group>"; };
 		84E4076B9B8E9B74726D0003 /* Pods-CoordinatedSimpleUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoordinatedSimpleUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CoordinatedSimpleUITests/Pods-CoordinatedSimpleUITests.release.xcconfig"; sourceTree = "<group>"; };
 		B7FC93B85684A5B33AA2438B /* Pods-CoordinatedSimple.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoordinatedSimple.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CoordinatedSimple/Pods-CoordinatedSimple.debug.xcconfig"; sourceTree = "<group>"; };
 		D184FC41A0333CC78F0E6915 /* Pods-CoordinatedSimpleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CoordinatedSimpleUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CoordinatedSimpleUITests/Pods-CoordinatedSimpleUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -206,6 +209,7 @@
 				7DC8EFE2226DC6DF005AB06E /* PhotoModel.swift */,
 				7DC8EFE4226DC6EC005AB06E /* CommentModel.swift */,
 				7DC8EFE6226DC6F5005AB06E /* PostModel.swift */,
+				7DD44773226F52520019BF8B /* ExampleModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -291,6 +295,7 @@
 				7D75B583226A193A004090E1 /* DataSources */,
 				7DC8EFED226DFC81005AB06E /* ImageDislayTableViewCell.swift */,
 				7DC8EFEE226DFC81005AB06E /* ImageDislayTableViewCell.xib */,
+				7DD44655226F099A0019BF8B /* TableViewCellDoubleTapDelegate.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -552,6 +557,7 @@
 				7D75B587226A1CAD004090E1 /* UsersDataCoordinator.swift in Sources */,
 				7DC8EFE9226DE9C8005AB06E /* AlbumDisplayViewController.swift in Sources */,
 				7DC8EFF2226E0051005AB06E /* UIImageCoordinator.swift in Sources */,
+				7DD44656226F099A0019BF8B /* TableViewCellDoubleTapDelegate.swift in Sources */,
 				7D3E12BB2268C19000BF0D52 /* DataProvider.swift in Sources */,
 				7D3E12BD2268C31600BF0D52 /* PersistentStorage.swift in Sources */,
 				7D75B585226A1967004090E1 /* TableViewDataSource.swift in Sources */,
@@ -568,6 +574,7 @@
 				7DC8EFD6226D9F90005AB06E /* SectionedTableViewDataSource.swift in Sources */,
 				7D3E12C42268C4ED00BF0D52 /* UserModel.swift in Sources */,
 				7D3E12B12268AE3500BF0D52 /* Storyboarded.swift in Sources */,
+				7DD44774226F52520019BF8B /* ExampleModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -583,7 +590,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7DC8EFD7226DAD73005AB06E /* PersistentStorage.swift in Sources */,
 				7DC4D4992268A8A6007CA313 /* CoordinatedSimpleUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

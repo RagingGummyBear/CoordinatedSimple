@@ -60,7 +60,6 @@ class PhotoDisplayCoordinator:NSObject, Coordinator, UIImageCoordinatorProtocol 
         self.navigationController.delegate = self // This line is a must do not remove
         // ////////////////////// //
         // Do coordinator parsing //
-        
         // ////////////////////// //
 
         // Default code used for removing of child coordinators // TODO: refactor it
@@ -92,7 +91,12 @@ class PhotoDisplayCoordinator:NSObject, Coordinator, UIImageCoordinatorProtocol 
     
     func getUIImage(photo: PhotoModel) -> Promise<UIImage> {
         // Request the image from the data proivder -> dataprovier checks if should fetch from storage or internet
+        
         return self.dataProvider.getUIImage(from: photo)
+    }
+    
+    func saveToFavourites(photo: PhotoModel, uiImage:UIImage){
+        self.dataProvider.saveToFavourites(photo: photo, uiImage: uiImage)
     }
 
     /* ******************** */

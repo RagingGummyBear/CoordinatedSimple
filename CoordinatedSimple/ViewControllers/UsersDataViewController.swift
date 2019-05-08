@@ -46,7 +46,7 @@ class UsersDataViewController: UIViewController, Storyboarded {
     func finalUISetup(){
         // Here do all the resizing and constraint calculations
         // In some cases apply the background gradient here
-        self.coordinator?.requestAllUsers().done({ (result: [UserModel]) in
+        self.coordinator?.requestAllUsers().done({ [unowned self] (result: [UserModel]) in
             self.usersDidLoad(result)
         }) .catch({ (error:Error) in
             print(error)

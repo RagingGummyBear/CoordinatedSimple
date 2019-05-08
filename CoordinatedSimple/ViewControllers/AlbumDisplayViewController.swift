@@ -23,7 +23,7 @@ class AlbumDisplayViewController: UIViewController, Storyboarded {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned self] in
             self.initalUISetup()
         }
     }
@@ -31,7 +31,7 @@ class AlbumDisplayViewController: UIViewController, Storyboarded {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [unowned self] in
             self.finalUISetup()
         }
     }
@@ -44,7 +44,7 @@ class AlbumDisplayViewController: UIViewController, Storyboarded {
     func finalUISetup(){
         // Here do all the resizing and constraint calculations
         // In some cases apply the background gradient here
-        self.coordinator?.requestAlbumData().done({ (albums: [AlbumModel]) in
+        self.coordinator?.requestAlbumData().done({ [unowned self] (albums: [AlbumModel]) in
             self.tableView.delegate = self
             self.dataSource = TableViewDataSource.make(for: albums)
             self.tableView.dataSource = self.dataSource
@@ -63,4 +63,7 @@ extension AlbumDisplayViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.coordinator?.displayAlbum(album: self.dataSource.models[indexPath.row])
     }
+    
 }
+
+

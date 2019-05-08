@@ -12,8 +12,39 @@ import UIKit
 
 class APIManager {
     
+    // MARK: - Comments CRUD
+    func readAllComments() -> Promise<[CommentModel]>{
+        return Promise { resolve in
+            firstly {
+                URLSession.shared.dataTask(.promise, with: try createReadAllComments()).validate()
+                // ^^ we provide `.validate()` so that eg. 404s get converted to errors
+                }.map {
+                    try JSONDecoder().decode([CommentModel].self, from: $0.data)
+                }.done { result in
+                    resolve.fulfill(result)
+                }.catch { error in
+                    resolve.reject(error)
+            }
+        }
+    }
+    
+    func readAllPosts() -> Promise<[PostModel]>{
+        return Promise { resolve in
+            firstly {
+                URLSession.shared.dataTask(.promise, with: try createReadAllPosts()).validate()
+                // ^^ we provide `.validate()` so that eg. 404s get converted to errors
+                }.map {
+                    try JSONDecoder().decode([PostModel].self, from: $0.data)
+                }.done { result in
+                    resolve.fulfill(result)
+                }.catch { error in
+                    resolve.reject(error)
+            }
+        }
+    }
+    
     // MARK: - TODOs CRUD
-    func realAllTODOs() -> Promise<[ToDoModel]> {
+    func readAllTODOs() -> Promise<[ToDoModel]> {
         return Promise { resolve in
             firstly {
                 URLSession.shared.dataTask(.promise, with: try createReadAllToDos()).validate()
@@ -43,16 +74,17 @@ class APIManager {
         }
     }
     
+    
     func updateTODO (todo: ToDoModel){
-        
+        // 
     }
     
     func deleteTODO (todoId: Int){
-        
+        //
     }
     
     func createTODO (todo: ToDoModel) {
-        
+        //
     }
     
     // MARK: - Users CRUD
@@ -87,16 +119,16 @@ class APIManager {
         }
     }
     
-    func updateUser(userId: Int){
-        
+    func updateUser(userId: Int, user: UserModel){
+        //
     }
     
     func deleteUser(userId: Int){
-        
+        //
     }
     
     func createUser(user: UserModel){
-        
+        //
     }
     
     // MARK: - Others.
@@ -116,6 +148,36 @@ class APIManager {
         }
     }
     
+    func readAllAlbums() -> Promise<[AlbumModel]> {
+        return Promise { seal in
+            firstly {
+                URLSession.shared.dataTask(.promise, with: try createReadAllAlbums()).validate()
+                // ^^ we provide `.validate()` so that eg. 404s get converted to errors
+                }.map {
+                    try JSONDecoder().decode([AlbumModel].self, from: $0.data)
+                }.done { result in
+                    seal.fulfill(result)
+                }.catch { error in
+                    seal.reject(error)
+            }
+        }
+    }
+    
+    func readAlbum(albumId: Int) -> Promise<AlbumModel> {
+        return Promise { seal in
+            firstly {
+                URLSession.shared.dataTask(.promise, with: try createReadAlbumIdRequest(albumId: albumId)).validate()
+                // ^^ we provide `.validate()` so that eg. 404s get converted to errors
+                }.map {
+                    try JSONDecoder().decode(AlbumModel.self, from: $0.data)
+                }.done { result in
+                    seal.fulfill(result)
+                }.catch { error in
+                    seal.reject(error)
+            }
+        }
+    }
+    
     func readAlbums(from userId: Int) -> Promise<[AlbumModel]> {
         return Promise { resolve in
             firstly {
@@ -131,10 +193,38 @@ class APIManager {
         }
     }
     
+    func readAllPhotos() -> Promise<[PhotoModel]> {
+        return Promise { seal in
+            firstly {
+                URLSession.shared.dataTask(.promise, with: try createReadAllPhotos()).validate()
+                }.map {
+                    try JSONDecoder().decode([PhotoModel].self, from: $0.data)
+                }.done { result in
+                    seal.fulfill(result)
+                }.catch { error in
+                    seal.reject(error)
+            }
+        }
+    }
+    
     func readPhotos(from albumId: Int) -> Promise<[PhotoModel]> {
         return Promise { resolve in
             firstly {
                 URLSession.shared.dataTask(.promise, with: try createReadPhotoFromAlbumIdRequest(from: albumId)).validate()
+                }.map {
+                    try JSONDecoder().decode([PhotoModel].self, from: $0.data)
+                }.done { result in
+                    resolve.fulfill(result)
+                }.catch { error in
+                    resolve.reject(error)
+            }
+        }
+    }
+    
+    func readPhotos(fromUser userId: Int) -> Promise<[PhotoModel]> {
+        return Promise { resolve in
+            firstly {
+                URLSession.shared.dataTask(.promise, with: try createReadPhotoFromUserIdRequest(userId: userId)).validate()
                 }.map {
                     try JSONDecoder().decode([PhotoModel].self, from: $0.data)
                 }.done { result in
@@ -157,6 +247,7 @@ class APIManager {
             }
         }
     }
+    
     /* ********************** */
     // Request prep functions //
     /* ********************** */
@@ -268,12 +359,19 @@ class APIManager {
     }
     
     private func createReadPhotoFromAlbumIdRequest(from albumId: Int) throws -> URLRequest {
-        print("https://jsonplaceholder.typicode.com/photos?albumId=\(albumId)")
         let urlString = "https://jsonplaceholder.typicode.com/photos?albumId=\(albumId)"
         let url = URL(string: urlString)!
         var rq = URLRequest(url: url)
         return self.prepareGetRequest(request: &rq)
     }
+    
+    private func createReadPhotoFromUserIdRequest(userId: Int) throws -> URLRequest {
+        let urlString = "https://jsonplaceholder.typicode.com/users/\(userId)/photos"
+        let url = URL(string: urlString)!
+        var rq = URLRequest(url: url)
+        return self.prepareGetRequest(request: &rq)
+    }
+
     /* ****************************** */
     /* ****************************** */
     

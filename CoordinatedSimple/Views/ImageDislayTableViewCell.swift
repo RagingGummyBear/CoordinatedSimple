@@ -9,10 +9,9 @@
 import UIKit
 
 class ImageDislayTableViewCell: UITableViewCell {
-    
     @IBOutlet weak var imageDisplayView: UIImageView!
     @IBOutlet weak var imageTitleLabel: UILabel!
-    public weak var displayingPhoto: PhotoModel?
+    weak public var displayingPhoto: PhotoModel?
     weak public var doubleTapDelegate: TableViewCellDoubleTapPhotoDelegate?
     
     override func awakeFromNib() {
@@ -24,9 +23,9 @@ class ImageDislayTableViewCell: UITableViewCell {
     }
     
     @objc func doubleTapAction(){
+        print("Over here yooo")
         if let tapDelegate = self.doubleTapDelegate, let photo = self.displayingPhoto, let img = self.imageDisplayView.image {
-//            tapDelegate.doubleTapOn(photo: photo, uiImage: img)
+            tapDelegate.doubleTapOn(photo: photo, uiImage: img)
         }
     }
-    
 }

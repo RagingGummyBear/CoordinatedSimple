@@ -15,6 +15,7 @@ class PhotoDisplayViewController: UIViewController, Storyboarded, TableViewCellD
     // MARK: - Custom references and variables
     weak var coordinator: PhotoDisplayCoordinator? // Don't remove
     var dataSource: TableViewDataSource<PhotoModel>!
+    var foundPhotos: [PhotoModel] = [PhotoModel]()
     
     // MARK: - IBOutlets references
     @IBOutlet weak var tableView: UITableView!
@@ -41,6 +42,11 @@ class PhotoDisplayViewController: UIViewController, Storyboarded, TableViewCellD
     // MARK: - UI Functions
     func initalUISetup(){
         // Change label's text, etc.
+        if #available(iOS 10.0, *) {
+            self.tableView.prefetchDataSource = self
+        } else {
+            // Fallback on earlier versions
+        }
     }
 
     func finalUISetup(){
@@ -54,10 +60,9 @@ class PhotoDisplayViewController: UIViewController, Storyboarded, TableViewCellD
     func setUpTableView(){
         let cellIdentifier = "photoDisplayCellIdentifier"
         self.tableView.register(UINib(nibName: "ImageDislayTableViewCell", bundle: nil), forCellReuseIdentifier: cellIdentifier)
-        print("here")
-        self.coordinator?.requestPhotoData().done({ (photos: [PhotoModel]) in
-            print("here2")
-            self.dataSource = TableViewDataSource.make(for: photos, imageProvider: self.coordinator!, doubleTapDelegate: nil, reuseIdentifier: cellIdentifier)
+        self.coordinator?.requestPhotoData().done({ [unowned self] (photos: [PhotoModel]) in
+            self.foundPhotos = photos
+            self.dataSource = TableViewDataSource.make(for: photos, imageProvider: self.coordinator!, doubleTapDelegate: self, reuseIdentifier: cellIdentifier)
             self.tableView.dataSource = self.dataSource
             self.tableView.reloadData()
         }).catch({ (error: Error) in
@@ -68,5 +73,19 @@ class PhotoDisplayViewController: UIViewController, Storyboarded, TableViewCellD
     
     func doubleTapOn(photo: PhotoModel, uiImage: UIImage) {
         print("Dont care yo")
+    }
+}
+
+
+extension PhotoDisplayViewController : UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        for indexPath in indexPaths {
+            if self.foundPhotos.count > indexPath.row {
+                DispatchQueue.global().async { [unowned self] in
+                    // This adds the images to local storage so it's fast enough to prevent the table view flickering and/or delayed image load
+                    _ = self.coordinator?.getUIImage(photo: self.foundPhotos[indexPath.row])
+                }
+            }
+        }
     }
 }

@@ -44,7 +44,7 @@ class ToDoViewController: UIViewController, Storyboarded {
     func finalUISetup(){
         // Here do all the resizing and constraint calculations
         // In some cases apply the background gradient here
-        self.coordinator?.getLoggedUserToDo().done({ (result:[ToDoModel]) in
+        self.coordinator?.getLoggedUserToDo().done({ [unowned self] (result:[ToDoModel]) in
             self.dataSource = TableViewDataSource.make(for: result)
             self.tableView.dataSource = self.dataSource
             self.tableView.reloadData()

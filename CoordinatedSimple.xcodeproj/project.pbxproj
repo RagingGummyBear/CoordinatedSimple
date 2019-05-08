@@ -15,13 +15,13 @@
 		7D3E12B72268AF1200BF0D52 /* ToDoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E12B62268AF1200BF0D52 /* ToDoViewController.swift */; };
 		7D3E12B92268AF3700BF0D52 /* ToDoCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E12B82268AF3700BF0D52 /* ToDoCoordinator.swift */; };
 		7D3E12BB2268C19000BF0D52 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E12BA2268C19000BF0D52 /* DataProvider.swift */; };
-		7D3E12BD2268C31600BF0D52 /* PersistentStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E12BC2268C31600BF0D52 /* PersistentStorage.swift */; };
 		7D3E12BF2268C32700BF0D52 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E12BE2268C32700BF0D52 /* APIManager.swift */; };
 		7D3E12C22268C40100BF0D52 /* KeyedArchiverHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E12C12268C40100BF0D52 /* KeyedArchiverHandler.swift */; };
 		7D3E12C42268C4ED00BF0D52 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D3E12C32268C4ED00BF0D52 /* UserModel.swift */; };
 		7D75B585226A1967004090E1 /* TableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D75B584226A1967004090E1 /* TableViewDataSource.swift */; };
 		7D75B587226A1CAD004090E1 /* UsersDataCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D75B586226A1CAD004090E1 /* UsersDataCoordinator.swift */; };
 		7D75B589226A1CD5004090E1 /* UsersDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D75B588226A1CD5004090E1 /* UsersDataViewController.swift */; };
+		7DB9222822806274000E1C2F /* PersistentStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB9222722806274000E1C2F /* PersistentStorage.swift */; };
 		7DC4D4792268A8A1007CA313 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4D4782268A8A1007CA313 /* AppDelegate.swift */; };
 		7DC4D47E2268A8A1007CA313 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7DC4D47C2268A8A1007CA313 /* Main.storyboard */; };
 		7DC4D4802268A8A6007CA313 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7DC4D47F2268A8A6007CA313 /* Assets.xcassets */; };
@@ -78,13 +78,13 @@
 		7D3E12B62268AF1200BF0D52 /* ToDoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoViewController.swift; sourceTree = "<group>"; };
 		7D3E12B82268AF3700BF0D52 /* ToDoCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCoordinator.swift; sourceTree = "<group>"; };
 		7D3E12BA2268C19000BF0D52 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
-		7D3E12BC2268C31600BF0D52 /* PersistentStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentStorage.swift; sourceTree = "<group>"; };
 		7D3E12BE2268C32700BF0D52 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		7D3E12C12268C40100BF0D52 /* KeyedArchiverHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyedArchiverHandler.swift; sourceTree = "<group>"; };
 		7D3E12C32268C4ED00BF0D52 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		7D75B584226A1967004090E1 /* TableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDataSource.swift; sourceTree = "<group>"; };
 		7D75B586226A1CAD004090E1 /* UsersDataCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersDataCoordinator.swift; sourceTree = "<group>"; };
 		7D75B588226A1CD5004090E1 /* UsersDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersDataViewController.swift; sourceTree = "<group>"; };
+		7DB9222722806274000E1C2F /* PersistentStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentStorage.swift; sourceTree = "<group>"; };
 		7DC4D4752268A8A1007CA313 /* CoordinatedSimple.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoordinatedSimple.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DC4D4782268A8A1007CA313 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7DC4D47D2268A8A1007CA313 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -163,13 +163,13 @@
 		7D3E12A22268AA4600BF0D52 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
+				7DC8EFF1226E0051005AB06E /* UIImageCoordinator.swift */,
 				7D3E12AE2268AE2400BF0D52 /* Coordinator.swift */,
 				7D3E12B22268AE5A00BF0D52 /* MainCoordinator.swift */,
 				7D3E12B82268AF3700BF0D52 /* ToDoCoordinator.swift */,
 				7D75B586226A1CAD004090E1 /* UsersDataCoordinator.swift */,
 				7DC8EFDA226DB3CE005AB06E /* SelectLoggedUserCoordinator.swift */,
 				7DC8EFEA226DE9E2005AB06E /* AlbumDisplayCoordinator.swift */,
-				7DC8EFF1226E0051005AB06E /* UIImageCoordinator.swift */,
 				7DC8EFF3226E0166005AB06E /* PhotoDisplayCoordinator.swift */,
 			);
 			path = Coordinators;
@@ -193,8 +193,8 @@
 			isa = PBXGroup;
 			children = (
 				7D3E12C02268C3DA00BF0D52 /* PersistentStorageProviders */,
+				7DB9222722806274000E1C2F /* PersistentStorage.swift */,
 				7D3E12BA2268C19000BF0D52 /* DataProvider.swift */,
-				7D3E12BC2268C31600BF0D52 /* PersistentStorage.swift */,
 				7D3E12BE2268C32700BF0D52 /* APIManager.swift */,
 			);
 			path = Data;
@@ -259,9 +259,9 @@
 			children = (
 				7D3E12A52268AA8000BF0D52 /* Models */,
 				7DC8EFEC226DFC31005AB06E /* Views */,
-				7D3E12A32268AA5200BF0D52 /* ViewControllers */,
-				7D3E12A22268AA4600BF0D52 /* Coordinators */,
 				7D3E12A42268AA5B00BF0D52 /* Data */,
+				7D3E12A22268AA4600BF0D52 /* Coordinators */,
+				7D3E12A32268AA5200BF0D52 /* ViewControllers */,
 				7DC4D4782268A8A1007CA313 /* AppDelegate.swift */,
 				7DC4D47C2268A8A1007CA313 /* Main.storyboard */,
 				7DC4D47F2268A8A6007CA313 /* Assets.xcassets */,
@@ -559,7 +559,6 @@
 				7DC8EFF2226E0051005AB06E /* UIImageCoordinator.swift in Sources */,
 				7DD44656226F099A0019BF8B /* TableViewCellDoubleTapDelegate.swift in Sources */,
 				7D3E12BB2268C19000BF0D52 /* DataProvider.swift in Sources */,
-				7D3E12BD2268C31600BF0D52 /* PersistentStorage.swift in Sources */,
 				7D75B585226A1967004090E1 /* TableViewDataSource.swift in Sources */,
 				7DC8EFDB226DB3CE005AB06E /* SelectLoggedUserCoordinator.swift in Sources */,
 				7D3E12AF2268AE2400BF0D52 /* Coordinator.swift in Sources */,
@@ -568,6 +567,7 @@
 				7D3E12C22268C40100BF0D52 /* KeyedArchiverHandler.swift in Sources */,
 				7DC8EFF6226E0181005AB06E /* PhotoDisplayViewController.swift in Sources */,
 				7D3E12B32268AE5A00BF0D52 /* MainCoordinator.swift in Sources */,
+				7DB9222822806274000E1C2F /* PersistentStorage.swift in Sources */,
 				7D3E12B72268AF1200BF0D52 /* ToDoViewController.swift in Sources */,
 				7D3E12B92268AF3700BF0D52 /* ToDoCoordinator.swift in Sources */,
 				7DC8EFF4226E0166005AB06E /* PhotoDisplayCoordinator.swift in Sources */,

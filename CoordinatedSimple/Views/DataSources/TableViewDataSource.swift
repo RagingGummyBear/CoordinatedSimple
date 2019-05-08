@@ -56,7 +56,6 @@ extension TableViewDataSource where Model == ExampleModel {
     }
 }
 
-
 extension TableViewDataSource where Model == UserModel {
     static func make(for users: [UserModel],
                      reuseIdentifier: String = "userDataCell") -> TableViewDataSource {
@@ -83,7 +82,6 @@ extension TableViewDataSource where Model == ToDoModel {
     }
 }
 
-
 extension TableViewDataSource where Model == AlbumModel {
     static func make(for albums: [AlbumModel],
                      reuseIdentifier: String = "albumDisplayCellIdentifier") -> TableViewDataSource {
@@ -98,7 +96,6 @@ extension TableViewDataSource where Model == AlbumModel {
 }
 
 extension TableViewDataSource where Model == PhotoModel {
-    
     static func make(for photos: [PhotoModel], imageProvider: UIImageCoordinatorProtocol, doubleTapDelegate: TableViewCellDoubleTapPhotoDelegate?,
                      reuseIdentifier: String = "photosDisplayCellIdentifier") -> TableViewDataSource {
         return TableViewDataSource(
@@ -106,8 +103,9 @@ extension TableViewDataSource where Model == PhotoModel {
             reuseIdentifier: reuseIdentifier
         ) { (photo, cell) in
             if let cell = cell as? ImageDislayTableViewCell {
+                cell.doubleTapDelegate = doubleTapDelegate
                 cell.imageTitleLabel.text = photo.title
-                imageProvider.getUIImage(photo: photo).done({ (image: UIImage) in
+                imageProvider.getUIImage(photo: photo).done({ [unowned cell] (image: UIImage) in
                     cell.imageDisplayView.image = image
                 }).catch({ (error: Error) in
                     print(error)

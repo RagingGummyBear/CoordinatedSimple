@@ -9,21 +9,70 @@
 import Foundation
 import PromiseKit
 import UIKit
+import Reachability
 
 public class DataProvider {
     
     // MARK: - Properties
     let persistentStorage:PersistentStorage = KeyedArchiverHandler()
     let apiManager: APIManager = APIManager()
+    let reachability = Reachability()!
+    var onlineConnection = false
     
+    init() {
+        reachability.whenReachable = { reachability in
+            if reachability.connection == .wifi {
+                print("Reachable via WiFi")
+                self.onlineConnection = true
+            } else {
+                print("Reachable via Cellular")
+                self.onlineConnection = true
+            }
+        }
+        
+        reachability.whenUnreachable = { _ in
+            print("Not reachable")
+            self.onlineConnection = false
+        }
+        
+        do {
+            try reachability.startNotifier()
+        } catch {
+            print("Unable to start notifier")
+        }
+
+    }
     
     // MARK: - Users => CRUD
     func readAllUsers() -> Promise<[UserModel]>{
-        return self.apiManager.getAllUsers()
+        if self.onlineConnection {
+            return Promise { resolve in
+                self.apiManager.getAllUsers().done { (users: [UserModel]) in
+                    _ = self.persistentStorage.setUsersList(elems: users)
+                    resolve.fulfill(users)
+                    } .catch({ (error: Error) in
+                        resolve.reject(error)
+                    })
+            }
+        } else {
+            return self.persistentStorage.readAllUsers()
+        }
     }
     
     func readUser(userID: Int) -> Promise<UserModel> {
-        return self.apiManager.readUser(userID: userID)
+        if self.onlineConnection {
+            return Promise { resolve in
+                self.apiManager.readUser(userID: userID).done({ (user: UserModel) in
+                    _ = self.persistentStorage.addUser(user: user) // WARNING Need to check if it already has the user or it will make duplicates
+                    resolve.fulfill(user)
+                }) .catch({ (error: Error) in
+                    resolve.reject(error)
+                })
+                
+            }
+        } else {
+            return self.persistentStorage.readUser(userID: userID)
+        }
     }
     
     func updateUser(user: UserModel){
@@ -35,37 +84,88 @@ public class DataProvider {
     }
     
     func createUser(user: UserModel){
+        if self.onlineConnection {
+            self.apiManager.createUser(user: user)
+        }
+        _ = self.persistentStorage.addUser(user: user)
         // put
     }
     
     
     // MARK: - TODOs => CRUD
-    func readAllTODOs() -> Promise<[ToDoModel]>{
-        return self.apiManager.realAllTODOs()
+    func readAllTODOs() -> Promise<[ToDoModel]> {
+        if self.onlineConnection {
+            return Promise { seal in
+                self.apiManager.readAllTODOs().done({ (todos: [ToDoModel]) in
+                    _ = self.persistentStorage.setTODOsList(elems: todos)
+                    seal.fulfill(todos)
+                }).catch({ (error: Error) in
+                    seal.reject(error)
+                })
+            }
+        } else {
+            return self.persistentStorage.readAllTODOs()
+        }
     }
     
     func readTODO(todoId: Int) -> Promise<ToDoModel> {
-        return self.apiManager.readTODO(todoId: todoId)
+        if self.onlineConnection {
+            return self.apiManager.readTODO(todoId: todoId)
+        } else {
+            return self.persistentStorage.readTODO(todoId: todoId)
+        }
     }
     
     func updateTODO(todo: ToDoModel){
-        // patch
+        if self.onlineConnection {
+            self.apiManager.updateTODO(todo: todo)
+        }
+        _ = self.persistentStorage.updateTODO(todo: todo)
     }
     
     func deleteTODO(todoId: Int){
         // delete
+        // TODO
     }
     
-    func createTODO(todo: UserModel){
-        // put
+    func createTODO(todo: ToDoModel){
+        if self.onlineConnection {
+            self.apiManager.createTODO(todo: todo)
+        }
+        _ = self.persistentStorage.createTODO(todo: todo)
     }
     
     // MARK: - Albums => CRUD
-    func readAllAlbums() {
+    func readAllAlbums() -> Promise<[AlbumModel]>{
+        if self.onlineConnection {
+//            self.apiManager.readAll
+            return Promise { seal in
+                self.apiManager.readAllAlbums().done({ (albums: [AlbumModel]) in
+                    _ = self.persistentStorage.setAlbumsList(elems: albums)
+                    seal.fulfill(albums)
+                }).catch({ (error: Error) in
+                    seal.reject(error)
+                })
+            }
+        } else {
+            // Return
+            return self.persistentStorage.readAllAlbums()
+        }
     }
     
-    func readAlbum(albumId: Int){
-        
+    func readAlbum(albumId: Int) -> Promise<AlbumModel> {
+        if self.onlineConnection {
+            return Promise { seal in
+                self.apiManager.readAlbum(albumId: albumId).done({ (album: AlbumModel) in
+                    _ = self.persistentStorage.createAlbum(album: album)
+                    seal.fulfill(album)
+                }).catch({ (error: Error) in
+                    seal.reject(error)
+                })
+            }
+        } else {
+            return self.persistentStorage.readAlbum(albumId: albumId)
+        }
     }
     
     func updateAlbum(album: AlbumModel){
@@ -76,15 +176,28 @@ public class DataProvider {
         // delete
     }
     
-    func createAlbum(album: UserModel){
+    func createAlbum(album: AlbumModel){
         // put
+        if self.onlineConnection {
+            
+        }
+        _ = self.persistentStorage.createAlbum(album: album)
     }
     
     
     // MARK: - Photos => CRUD
     func readAllPhotos() -> Promise<[PhotoModel]> {
-        return  Promise { resolve in
-            
+        if self.onlineConnection {
+            return Promise { seal in
+                self.apiManager.readAllPhotos().done({ (photos: [PhotoModel]) in
+                    _ = self.persistentStorage.setPhotosList(elems: photos)
+                    seal.fulfill(photos)
+                }) .catch({ (error: Error) in
+                    seal.reject(error)
+                })
+            }
+        } else {
+            return self.persistentStorage.readAllPhotos()
         }
     }
     
@@ -95,23 +208,27 @@ public class DataProvider {
     }
     
     func updatePhoto(photo: PhotoModel) -> Promise<PhotoModel> {
+        
         return  Promise { resolve in
             
         }
     }
     
     func deletePhoto(photoId: Int) -> Promise<Bool> {
+        
         return  Promise { resolve in
             
         }
     }
     
-    func createPhoto(photo: PhotoModel) -> Promise<PhotoModel> {
-        return  Promise { resolve in
+    func createPhoto(photo: PhotoModel) {
+        
+        if self.onlineConnection {
             
         }
+        _ = self.persistentStorage.createPhoto(photo: photo)
+        
     }
-    
     
     // MARK: - Other.
     func getLoggedUser() -> Promise<UserModel>{
@@ -123,17 +240,91 @@ public class DataProvider {
     }
     
     func readTODOs(from userId: Int) -> Promise<[ToDoModel]> {
-        return self.apiManager.readTODOs(from: userId)
+        if self.onlineConnection {
+            return Promise { seal in
+                self.apiManager.readTODOs(from: userId).done { (todos: [ToDoModel]) in
+                    _ = self.persistentStorage.setTODOsList(elems: todos)
+                    seal.fulfill(todos)
+                }.catch({ (error: Error) in
+                    seal.reject(error)
+                })
+            }
+        }
+        return self.persistentStorage.readTODOs(from: userId)
     }
     
     func readAlbums(from userId: Int) -> Promise<[AlbumModel]> {
-        return self.apiManager.readAlbums(from: userId)
+        if self.onlineConnection {
+            return Promise { seal in
+                self.apiManager.readAlbums(from: userId).done({ (albums: [AlbumModel]) in
+                    _ = self.persistentStorage.appendAlbumsList(elems: albums)
+                    seal.fulfill(albums)
+                }).catch({ (error: Error) in
+                    seal.reject(error)
+                })
+            }
+        }
+        return self.persistentStorage.readAlbums(from: userId)
     }
     
     func readPhotos(from albumId: Int) -> Promise<[PhotoModel]> {
-        return self.apiManager.readPhotos(from: albumId)
+        if self.onlineConnection {
+            return Promise { seal in
+                self.apiManager.readPhotos(from: albumId).done({ (photos: [PhotoModel]) in
+                    _ = self.persistentStorage.appendPhotosList(elems: photos)
+                    seal.fulfill(photos)
+                }) .catch({ (error: Error) in
+                    seal.reject(error)
+                })
+            }
+        }
+        return self.persistentStorage.readPhotos(fromAlbum: albumId)
     }
     
+    func readPhotos(fromUser userId: Int) -> Promise <[PhotoModel]> {
+        if self.onlineConnection {
+            return Promise { seal in
+                self.apiManager.readPhotos(fromUser: userId).done({ (photos: [PhotoModel]) in
+                    _ = self.persistentStorage.appendPhotosList(elems: photos)
+                    seal.fulfill(photos)
+                }).catch({ (error: Error) in
+                    seal.reject(error)
+                })
+            }
+        } else {
+            return self.persistentStorage.readPhotos(from: userId)
+        }
+    }
+    
+    func readAllComments() -> Promise<[CommentModel]> {
+        return Promise { resolve in
+            self.apiManager.readAllComments().done({ (comments: [CommentModel]) in
+                _ = self.persistentStorage.setCommentsList(elems: comments)
+                resolve.fulfill(comments)
+            }).catch({ (error: Error) in
+                resolve.reject(error)
+            })
+        }
+    }
+    
+    func readAllPosts() -> Promise<[PostModel]> {
+        return Promise { resolve in
+            self.apiManager.readAllPosts().done({ (posts: [PostModel]) in
+                _ = self.persistentStorage.setPostsList(elems: posts)
+                resolve.fulfill(posts)
+            }).catch({ (error: Error) in
+                resolve.reject(error)
+            })
+        }
+    }
+    
+    func readPosts(from userId: Int) -> Promise<[PostModel]> {
+        return self.persistentStorage.readPosts(from: userId)
+    }
+    
+    func readComemnts(from userId: Int) -> Promise<[CommentModel]> {
+        return self.persistentStorage.readComments(from: userId)
+    }
     
     func getUIImage(from photo: PhotoModel) -> Promise<UIImage> {
         return Promise { resolve in
@@ -141,11 +332,11 @@ public class DataProvider {
                 if hasUIImg {
                     self.persistentStorage.getPhoto(photo: photo).done({ (result: UIImage) in
                         resolve.fulfill(result)
-                    }) .catch({ (error: Error) in
+                    }).catch({ (error: Error) in
                         self.apiManager.fetchUIImage(photo: photo).done({ (image: UIImage) in
                             self.persistentStorage.savePhoto(photo: photo, uiImage: image, uiImageThumbnail: image)
                             resolve.fulfill(image)
-                        }) .catch({ (error: Error) in
+                        }).catch({ (error: Error) in
                             resolve.reject(error)
                         })
                     })
@@ -153,7 +344,7 @@ public class DataProvider {
                     self.apiManager.fetchUIImage(photo: photo).done({ (image: UIImage) in
                         self.persistentStorage.savePhoto(photo: photo, uiImage: image, uiImageThumbnail: image)
                         resolve.fulfill(image)
-                    }) .catch({ (error: Error) in
+                    }).catch({ (error: Error) in
                         resolve.reject(error)
                     })
                 }
@@ -161,7 +352,7 @@ public class DataProvider {
                 self.apiManager.fetchUIImage(photo: photo).done({ (image: UIImage) in
                     self.persistentStorage.savePhoto(photo: photo, uiImage: image, uiImageThumbnail: image)
                     resolve.fulfill(image)
-                }) .catch({ (error: Error) in
+                }).catch({ (error: Error) in
                     resolve.reject(error)
                 })
             })

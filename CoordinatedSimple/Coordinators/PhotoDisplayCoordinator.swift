@@ -91,7 +91,6 @@ class PhotoDisplayCoordinator:NSObject, Coordinator, UIImageCoordinatorProtocol 
     
     func getUIImage(photo: PhotoModel) -> Promise<UIImage> {
         // Request the image from the data proivder -> dataprovier checks if should fetch from storage or internet
-        
         return self.dataProvider.getUIImage(from: photo)
     }
     

@@ -49,7 +49,7 @@ class SelectLoggedUserViewController: UIViewController, Storyboarded {
     func finalUISetup(){
         // Here do all the resizing and constraint calculations
         // In some cases apply the background gradient here
-        self.coordinator?.requestSelectedUser().done({ (user: UserModel) in
+        self.coordinator?.requestSelectedUser().done({ [unowned self] (user: UserModel) in
             self.userIDLabel.text = "\(user.id!)"
             self.userNameLabel.text = user.name
             self.userEmailLabel.text = user.email

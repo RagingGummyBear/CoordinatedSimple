@@ -1011,7 +1011,7 @@ class KeyedArchiverHandler: PersistentStorage {
     }
     
     // MARK: - UIImage functions
-    func hasPhoto(photo: PhotoModel) -> Promise<Bool>{
+    func hasPhoto(photo: PhotoModel) -> Promise<Bool> {
         return Promise { resolve in
             var photoImageUrl = self.getPhotoStartingDirectory(albumId: photo.albumId)
             var photoThumbnailUrl = self.getPhotoStartingDirectory(albumId: photo.albumId)
@@ -1025,7 +1025,7 @@ class KeyedArchiverHandler: PersistentStorage {
         }
     }
     
-    func savePhoto(photo: PhotoModel, uiImage: UIImage, uiImageThumbnail: UIImage){
+    func savePhoto(photo: PhotoModel, uiImage: UIImage, uiImageThumbnail: UIImage) {
         var photoImageUrl = self.getPhotoStartingDirectory(albumId: photo.albumId)
         var photoThumbnailUrl = self.getPhotoStartingDirectory(albumId: photo.albumId)
         
@@ -1081,7 +1081,7 @@ class KeyedArchiverHandler: PersistentStorage {
         }
     }
     
-    func getPhotoThumbnail(photo: PhotoModel) -> Promise<UIImage>{
+    func getPhotoThumbnail(photo: PhotoModel) -> Promise<UIImage> {
         return Promise { resolve in
             var photoThumbnailUrl = self.getPhotoStartingDirectory(albumId: photo.albumId)
             let strPhotoID = "\(photo.id!)"

@@ -63,7 +63,6 @@ extension AlbumDisplayViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.coordinator?.displayAlbum(album: self.dataSource.models[indexPath.row])
     }
-    
 }
 
 
